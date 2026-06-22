@@ -37,6 +37,7 @@ namespace synth {
                 notePremute.push_back(nota);
 
                 auto note = msg.getNoteNumber();
+                velocity = msg.getFloatVelocity();
                 auto freq = juce::MidiMessage::getMidiNoteInHertz(note);
                 lfo.setFrequency(freq);
                 noteIsOn = true;
@@ -61,7 +62,7 @@ namespace synth {
             // generate the LFO value
             float value = 0.0f;
             if (noteIsOn) {
-                value = lfo.processSample(0.0f);
+                value = lfo.processSample(0.0f) * velocity;
             }
 
             // per ogni canale del frame

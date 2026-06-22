@@ -35,5 +35,6 @@ namespace synth {
         juce::MidiMessage msg;
         std::vector<int> notePremute;
         LfoWaveForm wave = LfoWaveForm::sine;
+        float velocity; 
     };
 }  // namespace tremolo
