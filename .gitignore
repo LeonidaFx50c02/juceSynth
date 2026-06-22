@@ -1,0 +1,22 @@
+# JUCE
+Builds/
+DerivedData/
+*.user
+*.suo
+*.vcxproj*
+*.xcodeproj/xcuserdata/
+
+# IDE
+.vscode/
+.idea/
+
+# Compilazioni
+*.o
+*.obj
+*.exe
+*.dll
+*.a
+*.so
+
+# Mac
+.DS_Store
