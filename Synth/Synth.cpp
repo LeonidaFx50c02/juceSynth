@@ -15,6 +15,13 @@ namespace synth {
     {
         setWaveForm(LfoWaveForm::sine);
         lfo.setFrequency(440.f, true); // il cambio di f è istantaneo
+        //juce::ADSR::Parameters params;
+        params.attack = 0.1f;
+        params.decay = 0.1f; 
+        params.sustain = 0.8f; //level
+        params.release = 0.1f;
+
+        adsr.setParameters(params);
     }
 
     void Synth::prepare(double sampleRate, int expectedMaxFramesPerBlock)
@@ -25,28 +32,46 @@ namespace synth {
                     .numChannels = 1u,
         };
         lfo.prepare(processSpec);
+        adsr.setSampleRate(sampleRate);
     }
 
     void Synth::process(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages) noexcept
     {
+        //params.attack = parameters.attack.get();
+        //params.decay = parameters.decay.get();
+        //params.sustain = parameters.sustain.get();
+        //params.release = parameters.release.get();
+
         //auto totalNumOutputChannels = juce::AudioProcessor::getTotalNumOutputChannels();
-        for (const auto metadata : midiMessages) {
+        for (const auto& metadata : midiMessages) 
+        {
+
             msg = metadata.getMessage();
             int nota = msg.getNoteNumber();
-            if (msg.isNoteOn()) {
+
+            if (msg.isNoteOn()) 
+            {
                 notePremute.push_back(nota);
 
                 auto note = msg.getNoteNumber();
                 velocity = msg.getFloatVelocity();
                 auto freq = juce::MidiMessage::getMidiNoteInHertz(note);
                 lfo.setFrequency(freq);
+                adsr.noteOn();
                 noteIsOn = true;
             }
             if (msg.isNoteOff()) {
-                notePremute.erase(std::remove(notePremute.begin(), notePremute.end(), nota), notePremute.end());
-                if (notePremute.empty()) {
+                //notePremute.erase(std::remove(notePremute.begin(), notePremute.end(), nota), notePremute.end());
+                std::erase(notePremute, nota);
 
-                    noteIsOn = false;
+                if (notePremute.empty()) {
+                    adsr.noteOff();
+                    //DBG(params.release);
+                    //DBG(adsr.getNextSample());
+                    if (params.release < 0.0001f) {
+                        noteIsOn = false;
+                    }
+                    
                 }
                 else {
                     int ultNota = notePremute.back();
@@ -62,7 +87,7 @@ namespace synth {
             // generate the LFO value
             float value = 0.0f;
             if (noteIsOn) {
-                value = lfo.processSample(0.0f) * velocity;
+                value = lfo.processSample(0.0f) * velocity * adsr.getNextSample();
             }
 
             // per ogni canale del frame
@@ -93,6 +118,30 @@ namespace synth {
                 });
             break;
         }
+    }
+
+    void Synth::setAttack(float attack)
+    {
+        params.attack = attack;
+        adsr.setParameters(params);
+    }
+
+    void Synth::setDecay(float decay)
+    {
+        params.decay = decay;
+        adsr.setParameters(params);
+    }
+
+    void Synth::setSustain(float sustain)
+    {
+        params.sustain = sustain;
+        adsr.setParameters(params);
+    }
+
+    void Synth::setRelease(float release)
+    {
+        params.release = release;
+        adsr.setParameters(params);
     }
 
 }

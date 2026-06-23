@@ -34,6 +34,27 @@ void TremoloAudioProcessor::changeWaveForm(LfoWaveForm wave)
     synth.setWaveForm(wave);
 }
 
+void TremoloAudioProcessor::setAttack(float attack)
+{
+    synth.setAttack(attack);
+}
+
+void TremoloAudioProcessor::setDecay(float decay)
+{
+    synth.setDecay(decay);
+}
+
+void TremoloAudioProcessor::setSustain(float sustain)
+{
+    synth.setSustain(sustain);
+}
+
+void TremoloAudioProcessor::setRelease(float release)
+{
+    synth.setRelease(release);
+}
+
+
 //==============================================================================
 const juce::String TremoloAudioProcessor::getName() const
 {

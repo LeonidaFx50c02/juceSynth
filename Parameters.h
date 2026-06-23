@@ -14,6 +14,11 @@
 namespace synth {
     struct Parameters {
         explicit Parameters(juce::AudioProcessor&);
+        
+        juce::AudioParameterFloat& attack;
+        juce::AudioParameterFloat& decay;
+        juce::AudioParameterFloat& sustain;
+        juce::AudioParameterFloat& release;
 
         juce::AudioParameterChoice& waveform;
 

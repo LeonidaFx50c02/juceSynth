@@ -48,6 +48,22 @@ private:
     //};
     TremoloAudioProcessor& audioProcessor;
     synth::LfoVisualizer lfoVisualizer;
+
+    juce::Slider attackSlider;
+    juce::Slider decaySlider;
+    juce::Slider sustainSlider;
+    juce::Slider releaseSlider;
+
+    juce::Label attackLabel;
+    juce::Label decayLabel;
+    juce::Label sustainLabel;
+    juce::Label releaseLabel;
+
+    juce::SliderParameterAttachment attackAttachment;
+    juce::SliderParameterAttachment decayAttachment;
+    juce::SliderParameterAttachment sustainAttachment;
+    juce::SliderParameterAttachment releaseAttachment;
+
     juce::TextButton sineButton{ "Sine" };
     juce::TextButton triangleButton{ "Triangle" };
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TremoloAudioProcessorEditor)

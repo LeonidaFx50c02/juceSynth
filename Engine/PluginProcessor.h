@@ -10,7 +10,7 @@
 
 #include <JuceHeader.h>
 #include "../Synth/Synth.h"
-//#include "../Parameters.h"
+#include "../Parameters.h"
 //==============================================================================
 /**
 */
@@ -21,8 +21,16 @@ public:
     TremoloAudioProcessor();
     ~TremoloAudioProcessor() override;
 
-    //const tremolo::Parameters& getParameterRefs() { return parameters; }
+    //==============================================================================
+
+    const synth::Parameters& getParameterRefs() { return parameters; }
     void changeWaveForm(LfoWaveForm wave);
+
+    //ADSR Parameters===============================================================
+    void setAttack(float attack);
+    void setDecay(float decay);
+    void setSustain(float sustain);
+    void setRelease(float release);
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -60,6 +68,6 @@ public:
 private:
     //==============================================================================
     synth::Synth synth;
-    //synth::Parameters parameters{*this};
+    synth::Parameters parameters{*this};
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TremoloAudioProcessor)
 };
